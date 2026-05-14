@@ -28,14 +28,7 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/oauth2/callback" element={<OAuth2Callback />} />
-          <Route 
-            path="/" 
-            element={
-              <ProtectedRoute>
-                <ChatPage />
-              </ProtectedRoute>
-            } 
-          />
+          <Route path="/" element={<ChatPage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </AuthProvider>
