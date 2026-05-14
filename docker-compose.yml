@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  genops-backend:
+    build:
+      context: ./genops-ai-backend
+    container_name: genops-backend
+    ports:
+      - "8081:8080"
+    environment:
+      - REDIS_HOST=genops-redis
+      - REDIS_PORT=6379
+      - VLLM_BASE_URL=http://host.docker.internal:8000
+      - VLLM_MODEL=Qwen/Qwen2.5-7B-Instruct
+      - AI_TIMEOUT=90
+      - AI_RETRY_COUNT=3
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://genops-db:5432/genops
+      - SPRING_DATASOURCE_USERNAME=genops_user
+      - SPRING_DATASOURCE_PASSWORD=genops_pass
+      - JWT_SECRET=5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437
+    depends_on:
+      - genops-redis
+      - genops-db
+    networks:
+      - genops-network
+
+  genops-db:
+    image: postgres:16-alpine
+    container_name: genops-db
+    environment:
+      - POSTGRES_DB=genops
+      - POSTGRES_USER=genops_user
+      - POSTGRES_PASSWORD=genops_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - genops-network
+
+  genops-redis:
+    image: redis:7-alpine
+    container_name: genops-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - genops-network
+
+  genops-frontend:
+    build:
+      context: ./genops-ai-frontend
+    container_name: genops-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - genops-backend
+    networks:
+      - genops-network
+
+networks:
+  genops-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  postgres-data:

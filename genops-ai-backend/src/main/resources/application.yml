@@ -1,0 +1,65 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: genops-ai-backend
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/genops}
+    username: ${SPRING_DATASOURCE_USERNAME:genops_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:genops_pass}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: 2000ms
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:placeholder}
+            client-secret: ${GOOGLE_CLIENT_SECRET:placeholder}
+            scope: profile, email
+          github:
+            client-id: ${GITHUB_CLIENT_ID:placeholder}
+            client-secret: ${GITHUB_CLIENT_SECRET:placeholder}
+            scope: read:user, user:email
+
+ai:
+  vllm:
+    base-url: ${VLLM_BASE_URL:http://localhost:8000}
+    model: ${VLLM_MODEL:Qwen/Qwen2.5-7B-Instruct}
+    timeout-seconds: ${AI_TIMEOUT:90}
+    retry-count: ${AI_RETRY_COUNT:3}
+  memory:
+    max-messages: ${AI_MAX_MESSAGES:10}
+    ttl-hours: ${AI_MEMORY_TTL:24}
+
+jwt:
+  secret: ${JWT_SECRET:5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437}
+  expiration: 86400000 # 24 hours
+
+logging:
+  level:
+    com.genops.ai: DEBUG
+    org.springframework.web: INFO
+    org.springframework.data.redis: WARN
+    org.springframework.security: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
