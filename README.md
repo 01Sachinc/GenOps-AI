@@ -1,4 +1,4 @@
-# GenOps AI Platform 🚀
+# GenOps AI Platform
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev/)
@@ -171,15 +171,15 @@ graph LR
 
 ```text
 genops-ai-platform/
-├── frontend/          # React + Vite + Tailwind
-├── backend/           # Spring Boot WebFlux
-├── docker/            # Nginx & Environment configs
-├── k8s/               # Kubernetes Manifests
-├── jenkins/           # CI/CD Pipeline scripts
-├── monitoring/        # Prometheus & Grafana configs
-├── docs/              # Detailed Documentation
-├── .github/           # GitHub Actions Workflows
-└── docker-compose.yml # Local Development Orchestration
+├── frontend/          
+├── backend/           
+├── docker/            
+├── k8s/               
+├── jenkins/           
+├── monitoring/        
+├── docs/              
+├── .github/           
+└── docker-compose.yml 
 ```
 
 ---
@@ -195,4 +195,4 @@ genops-ai-platform/
 ---
 
 ## ⚖️ License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License see the [LICENSE](LICENSE) file for details.
