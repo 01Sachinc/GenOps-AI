@@ -18,13 +18,31 @@ public class ChatService {
 
     private final VllmService vllmService;
     private final ChatMemoryRepository memoryRepository;
+    private final org.springframework.ai.vectorstore.VectorStore vectorStore;
 
     public Flux<String> streamChat(String conversationId, ChatRequest request) {
         log.info("Processing chat session: {}", conversationId);
 
+        // Perform RAG search
+        List<org.springframework.ai.document.Document> contextDocs = vectorStore.similaritySearch(
+                org.springframework.ai.vectorstore.SearchRequest.query(request.getMessage()).withTopK(3)
+        );
+
+        String context = contextDocs.stream()
+                .map(org.springframework.ai.document.Document::getContent)
+                .collect(java.util.stream.Collectors.joining("\n---\n"));
+
+        String enhancedMessage = request.getMessage();
+        if (!context.isEmpty()) {
+            enhancedMessage = "Context information is below.\n---------------------\n" +
+                    context + "\n---------------------\n" +
+                    "Given the context information and not prior knowledge, " +
+                    "answer the query: " + request.getMessage();
+        }
+
         OpenAiRequest.Message userMessage = OpenAiRequest.Message.builder()
                 .role("user")
-                .content(request.getMessage())
+                .content(enhancedMessage)
                 .build();
 
         return memoryRepository.getHistory(conversationId)

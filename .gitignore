@@ -1,0 +1,44 @@
+# Java
+**/target/
+**/*.class
+**/*.jar
+.mvn/
+.gradle/
+build/
+
+# Node
+**/node_modules/
+**/dist/
+**/.cache/
+**/build/
+.eslintcache
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Secrets
+.env
+.env.*
+! .env.example
+*.key
+*.pem
+**/application.properties
+**/application.yml
+**/application.yaml
+
+# Logs
+*.log
+logs/
+**/logs/
+
+# Redundant directories
+genops-ai-frontend/

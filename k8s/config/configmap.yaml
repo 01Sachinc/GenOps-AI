@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: genops-config
+  namespace: genops-prod
+data:
+  SPRING_PROFILES_ACTIVE: prod
+  LOGGING_LEVEL_ROOT: INFO
+  VLLM_MODEL: "Qwen/Qwen2.5-7B-Instruct"

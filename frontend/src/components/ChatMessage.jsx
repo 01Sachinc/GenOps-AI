@@ -36,7 +36,7 @@ export const ChatMessage = ({ message }) => {
         <div className="flex-1 space-y-2 overflow-hidden">
           <div className="flex items-center space-x-2">
             <span className="text-xs font-bold tracking-wider uppercase text-gray-500">
-              {isAi ? 'GenOps AI' : 'You'}
+              {isAi ? 'AI Assistant' : 'You'}
             </span>
             <span className="text-[10px] text-gray-600">
               {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

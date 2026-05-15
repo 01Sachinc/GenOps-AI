@@ -1,10 +1,7 @@
 import React from 'react';
-import { FiPlus, FiMessageSquare, FiTrash2, FiSettings, FiSliders, FiCpu, FiLogOut } from 'react-icons/fi';
-import { useAuth } from '../context/AuthContext';
+import { FiPlus, FiMessageSquare, FiTrash2, FiSettings, FiSliders, FiCpu } from 'react-icons/fi';
 
 export const Sidebar = ({ chats, activeChatId, onSelectChat, onCreateChat, onDeleteChat }) => {
-  const { logout, user } = useAuth();
-
   return (
     <div className="flex flex-col h-full bg-dark-800 text-gray-300 select-none">
       {/* Brand Header */}
@@ -14,7 +11,7 @@ export const Sidebar = ({ chats, activeChatId, onSelectChat, onCreateChat, onDel
         </div>
         <div>
           <h1 className="font-bold text-white tracking-wide text-lg">GenOps AI</h1>
-          <p className="text-xs text-indigo-400 font-medium">{user?.username || 'Enterprise Engine'}</p>
+          <p className="text-xs text-indigo-400 font-medium">Local Chat Engine</p>
         </div>
       </div>
 
@@ -84,30 +81,22 @@ export const Sidebar = ({ chats, activeChatId, onSelectChat, onCreateChat, onDel
       {/* Settings Footer Section */}
       <div className="p-4 border-t border-white/5 bg-dark-900/30 space-y-2">
         <div className="flex items-center justify-between text-xs text-gray-500 px-1">
-          <span>Engine Status</span>
+          <span>Ollama Status</span>
           <span className="flex items-center space-x-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-emerald-400/90 font-mono">Local Active</span>
+            <span className="text-emerald-400/90 font-mono">Active</span>
           </span>
         </div>
 
         <button 
-          onClick={() => alert("Settings panel configuration: Active Model set to Llama 3 via backend host port 11434.")}
+          onClick={() => alert("Connected to local Ollama on port 11434.")}
           className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-dark-700/50 text-gray-400 hover:text-gray-200 transition-colors text-sm cursor-pointer"
         >
           <div className="flex items-center space-x-3">
             <FiSettings className="w-4 h-4 text-gray-500" />
-            <span>Preferences</span>
+            <span>Settings</span>
           </div>
           <FiSliders className="w-3.5 h-3.5 text-gray-600" />
-        </button>
-
-        <button 
-          onClick={logout}
-          className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-400 transition-colors text-sm cursor-pointer"
-        >
-          <FiLogOut className="w-4 h-4" />
-          <span>Sign Out</span>
         </button>
       </div>
     </div>

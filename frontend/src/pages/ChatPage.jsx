@@ -86,7 +86,7 @@ export const ChatPage = () => {
                 presetPrompt={presetPrompt} 
               />
               <p className="mt-2 text-center text-[10px] sm:text-xs text-gray-600">
-                GenOps AI can make mistakes. Verify important information.
+                AI Assistant can make mistakes. Verify important information.
               </p>
             </div>
           </div>

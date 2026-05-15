@@ -1,29 +1,29 @@
 import React from 'react';
-import { FiZap, FiShield, FiCode, FiTrendingUp, FiStar } from 'react-icons/fi';
+import { FiZap, FiCode, FiTrendingUp, FiStar, FiEdit3 } from 'react-icons/fi';
 
 export const WelcomeScreen = ({ onPromptSelect }) => {
   const suggestionCards = [
     {
-      title: "Code Refactoring",
-      description: "Optimize this React functional component to reduce unnecessary re-renders.",
-      icon: <FiCode className="w-5 h-5 text-indigo-400" />,
+      title: "Write a Story",
+      description: "Write a short story about a time traveler who accidentally invents the internet.",
+      icon: <FiEdit3 className="w-5 h-5 text-indigo-400" />,
       gradient: "from-indigo-500/10 to-indigo-500/5",
     },
     {
-      title: "System Architecture",
-      description: "Design a fault-tolerant microservices architecture using Spring Boot and Docker.",
-      icon: <FiShield className="w-5 h-5 text-purple-400" />,
+      title: "Code Assistance",
+      description: "How do I implement a debounced search in React with hooks?",
+      icon: <FiCode className="w-5 h-5 text-purple-400" />,
       gradient: "from-purple-500/10 to-purple-500/5",
     },
     {
-      title: "Performance Strategy",
-      description: "List highly actionable strategies for achieving maximum Web Vitals scoring.",
+      title: "Explain Concept",
+      description: "Explain Quantum Entanglement like I'm five years old.",
       icon: <FiZap className="w-5 h-5 text-amber-400" />,
       gradient: "from-amber-500/10 to-amber-500/5",
     },
     {
-      title: "DevOps Telemetry",
-      description: "Explain how to set up real-time auto-healing anomaly detection with Prometheus.",
+      title: "Data Analysis",
+      description: "What are the most common data visualization patterns for financial trends?",
       icon: <FiTrendingUp className="w-5 h-5 text-emerald-400" />,
       gradient: "from-emerald-500/10 to-emerald-500/5",
     },
@@ -35,15 +35,15 @@ export const WelcomeScreen = ({ onPromptSelect }) => {
       <div className="text-center space-y-4 mb-10">
         <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-dark-700/60 border border-white/5 text-xs text-indigo-300 mb-2">
           <FiStar className="w-3.5 h-3.5 text-accent-primary animate-spin" style={{ animationDuration: '6s' }} />
-          <span>Next-Gen Enterprise Engine</span>
+          <span>Powered by local Ollama</span>
         </div>
 
         <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
-          Welcome to <span className="bg-gradient-to-r from-indigo-400 via-purple-300 to-indigo-200 bg-clip-text text-transparent">GenOps AI</span>
+          Welcome to <span className="bg-gradient-to-r from-indigo-400 via-purple-300 to-indigo-200 bg-clip-text text-transparent">AI Chat</span>
         </h1>
         
         <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
-          Experience ultra-low latency contextual generative reasoning powered locally by Llama 3. Select a workflow below or enter your custom command.
+          Ultra-low latency chat powered by your local Llama 3 model. Select a prompt below or start typing.
         </p>
       </div>
 
@@ -77,11 +77,11 @@ export const WelcomeScreen = ({ onPromptSelect }) => {
 
       {/* Feature Footnote */}
       <div className="mt-12 text-center text-xs text-gray-600 flex items-center space-x-4">
-        <span>🔒 Secure Local Runtime</span>
+        <span>🔒 Privacy First</span>
         <span>•</span>
-        <span>⚡ Real-time Execution</span>
+        <span>⚡ Local Computation</span>
         <span>•</span>
-        <span>📝 Advanced Markdown Render</span>
+        <span>📝 Markdown Support</span>
       </div>
     </div>
   );

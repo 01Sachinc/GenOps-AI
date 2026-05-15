@@ -39,16 +39,7 @@ export const useStreamingChat = () => {
     setActiveChatId(newChat.id);
   };
 
-  const deleteChat = async (id) => {
-    try {
-      const token = localStorage.getItem('genops_token');
-      await fetch(`http://localhost:8081/api/chat/${id}`, { 
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-    } catch (err) {
-      console.warn('Failed to clear backend session:', err);
-    }
+  const deleteChat = (id) => {
     setChats(prev => prev.filter(c => c.id !== id));
     if (activeChatId === id) setActiveChatId(null);
   };
@@ -96,18 +87,18 @@ export const useStreamingChat = () => {
     abortControllerRef.current = new AbortController();
 
     try {
-      const token = localStorage.getItem('genops_token');
       const response = await fetch(`http://localhost:8081/api/chat/${activeChatId}/stream`, {
         method: 'POST',
         headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({ 
+          message: text 
+        }),
         signal: abortControllerRef.current.signal
       });
 
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      if (!response.ok) throw new Error(`Backend error! status: ${response.status}`);
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -119,26 +110,26 @@ export const useStreamingChat = () => {
 
         const chunk = decoder.decode(value, { stream: true });
         
-        // Parse SSE format (data: token)
+        // SSE format: data: content
         const lines = chunk.split('\n');
         for (const line of lines) {
-          if (line.startsWith('data:')) {
-            const token = line.replace('data:', '');
-            accumulatedContent += token;
+          if (!line.trim() || !line.startsWith('data:')) continue;
+          
+          const content = line.replace('data:', '').trim();
+          accumulatedContent += content;
 
-            // Update AI message live
-            setChats(prev => prev.map(chat => {
-              if (chat.id === activeChatId) {
-                return {
-                  ...chat,
-                  messages: chat.messages.map(msg => 
-                    msg.id === aiMessageId ? { ...msg, content: accumulatedContent } : msg
-                  )
-                };
-              }
-              return chat;
-            }));
-          }
+          // Update AI message live
+          setChats(prev => prev.map(chat => {
+            if (chat.id === activeChatId) {
+              return {
+                ...chat,
+                messages: chat.messages.map(msg => 
+                  msg.id === aiMessageId ? { ...msg, content: accumulatedContent } : msg
+                )
+              };
+            }
+            return chat;
+          }));
         }
       }
 

@@ -2,35 +2,34 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-v4-38B2AC?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-Ready-326CE5?logo=kubernetes&logoColor=white)](https://kubernetes.io/)
+[![CI/CD](https://img.shields.io/badge/CI/CD-Enterprise-FF9900?logo=githubactions&logoColor=white)](https://github.com/features/actions)
 
-**GenOps AI Platform** is a production-grade, enterprise-scale Generative AI engineering platform. It provides a high-performance streaming interface for AI inference, backed by a reactive microservices architecture, persistent conversation memory, and robust security.
+**GenOps AI Platform** is an enterprise-grade, cloud-native AI infrastructure platform. It provides a high-performance streaming interface for AI inference, integrated RAG (Retrieval-Augmented Generation) pipelines, and robust observability, all designed for production scale.
 
 ---
 
 ## 📖 Table of Contents
 - [Features](#-features)
 - [Architecture Overview](#-architecture-overview)
-- [Streaming Architecture](#-streaming-architecture)
-- [Tech Stack](#-tech-stack)
+- [RAG Pipeline](#-rag-pipeline)
+- [CI/CD & DevOps](#-cicd--devops)
 - [Docker Setup](#-docker-setup)
 - [Kubernetes Deployment](#-kubernetes-deployment)
-- [API Documentation](#-api-documentation)
+- [Monitoring & Observability](#-monitoring--observability)
 - [Security](#-security)
-- [Monitoring](#-monitoring)
-- [Developer Info](#-developer-info)
 
 ---
 
 ## 🌟 Features
 
-- **⚡ Real-time Token Streaming**: ChatGPT-like experience using SSE (Server-Sent Events) and Fetch Streams.
-- **🧠 Contextual Redis Memory**: Intelligent sliding-window conversation history (last 10 turns).
-- **🔐 Enterprise Security**: Stateless JWT-based authentication with Social Login (OAuth2) readiness.
-- **🎨 Premium UI/UX**: Dark-themed glassmorphism design with Tailwind CSS v4 and Framer Motion animations.
-- **🐳 DevOps First**: Fully containerized with Docker and ready for Kubernetes orchestration.
-- **📈 Observability**: Correlation IDs and structured logging for request tracing.
+- **⚡ Real-time Token Streaming**: ChatGPT-like experience using SSE (Server-Sent Events) and WebFlux.
+- **📚 Integrated RAG Pipeline**: PDF upload, Apache Tika parsing, and semantic search using **PGVector**.
+- **🧠 Contextual Redis Memory**: Intelligent conversation history with sliding-window support.
+- **⚙️ Enterprise CI/CD**: Dual support for **Jenkinsfiles** and **GitHub Actions** with Trivy security scanning.
+- **☸️ Cloud-Native K8S**: Full manifests with HPA, readiness/liveness probes, and Ingress.
+- **📈 Full Observability**: Prometheus & Grafana stack for monitoring AI performance.
+- **🔐 DevSecOps Ready**: Automated vulnerability scanning and secure secret management.
 
 ---
 
@@ -38,149 +37,68 @@
 
 ```mermaid
 graph TD
-    User([User Browser]) <-->|Streaming Fetch| Frontend[React + Vite Frontend]
+    User([User Browser]) <-->|Streaming Fetch| Frontend[React Frontend]
     Frontend <-->|JWT Auth / SSE| Backend[Spring WebFlux Backend]
     Backend <-->|Contextual History| Redis[(Redis Memory)]
-    Backend <-->|User & Roles| DB[(MySQL 8.0)]
+    Backend <-->|Vector Data| DB[(PostgreSQL + PGVector)]
     Backend <-->|OpenAI Protocol| AI[AI Engine / vLLM]
 ```
 
 ---
 
-## ⚡ Streaming Flow
+## 📚 RAG Pipeline
 
-```mermaid
-sequenceDiagram
-    participant U as User Browser
-    participant F as React App
-    participant B as Spring WebFlux
-    participant A as vLLM / AI
-    
-    U->>F: Send Prompt
-    F->>B: POST /api/chat/stream (JWT)
-    B->>A: Stream Request (vLLM)
-    A-->>B: Token Chunks
-    B-->>F: SSE Token Stream
-    F-->>U: Render tokens live
-```
+The platform supports advanced **Retrieval-Augmented Generation**:
+1. **Upload**: Users upload technical PDFs via the UI.
+2. **Parsing**: Apache Tika extracts text in the backend.
+3. **Vectorization**: Spring AI generates embeddings using HuggingFace models.
+4. **Storage**: Vectors are stored in a **PGVector** database for high-performance similarity search.
+5. **Inference**: User queries are augmented with relevant context snippets before being sent to the LLM.
 
 ---
 
-## 🧠 Redis Conversation Memory
+## ⚙️ CI/CD & DevOps
 
-```mermaid
-graph LR
-    C[Chat Controller] --> G[Get History Mono]
-    G --> R[(Redis)]
-    R --> S[Build AI Context]
-    S --> I[Inference]
-    I --> Save[Save Response Mono]
-    Save --> R
-```
+### GitHub Actions
+- `build.yml`: Builds backend/frontend and pushes to Docker Hub.
+- `security.yml`: Runs daily **Trivy** scans on container images.
 
----
-
-## 🛠️ Tech Stack
-
-### Frontend
-- **Framework**: React 19 (Vite)
-- **Styling**: Tailwind CSS v4, Framer Motion
-- **Networking**: Axios (Auth), Fetch API (Streaming)
-- **Rendering**: React Markdown, Syntax Highlighter
-
-### Backend
-- **Framework**: Spring Boot 3.2 (Java 21)
-- **Engine**: Spring WebFlux (Reactive)
-- **Security**: Spring Security 6 (JWT + OAuth2)
-- **Persistence**: Spring Data JPA (MySQL), Reactive Redis
-
-### AI & Infrastructure
-- **AI Inference**: vLLM (OpenAI Compatible)
-- **Databases**: MySQL 8.0, Redis 7
-- **Orchestration**: Docker Compose, Kubernetes
+### Jenkins
+- `Jenkinsfile`: Multistage pipeline with environment selection (`dev`, `staging`, `prod`), security scanning, and automated K8s deployment.
 
 ---
 
 ## 🐳 Docker Setup
 
-### Prerequisites
-- Docker & Docker Compose installed.
-
 ### Quick Start
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/01Sachinc/GenOps-AI.git
-   cd GenOps-AI
-   ```
-2. Configure `.env`:
+1. Configure `.env`:
    ```bash
    cp .env.example .env
    ```
-3. Launch the platform:
+2. Launch the platform:
    ```bash
    docker-compose up -d --build
    ```
-4. Access:
+3. Access:
    - **Frontend**: [http://localhost:5173](http://localhost:5173)
-   - **Backend API**: [http://localhost:8081](http://localhost:8081)
+   - **Prometheus**: [http://localhost:9090](http://localhost:9090)
+   - **Grafana**: [http://localhost:3000](http://localhost:3000)
 
 ---
 
 ## ☸️ Kubernetes Deployment
 
-### Deployment Steps
-1. Create Namespace:
-   ```bash
-   kubectl apply -f k8s/namespace.yaml
-   ```
-2. Apply Config & Secrets:
-   ```bash
-   kubectl apply -f k8s/config/
-   ```
-3. Deploy Infrastructure:
-   ```bash
-   kubectl apply -f k8s/postgres/
-   kubectl apply -f k8s/redis/
-   ```
-4. Deploy App:
-   ```bash
-   kubectl apply -f k8s/backend/
-   kubectl apply -f k8s/frontend/
-   ```
-
----
-
-## 🔐 Security Architecture
-
-- **JWT Flow**: HMAC-SHA256 signing for stateless auth.
-- **Social Login**: OAuth2 Success Handlers for Google/GitHub.
-- **CORS**: Secure cross-origin resource sharing policy.
-- **Hashing**: BCrypt for local password storage.
-
----
-
-## 📈 Monitoring Stack
-
-- **Prometheus**: Scraping Actuator endpoints.
-- **Grafana**: Visualizing token latency and memory usage.
-- **Loki**: Log aggregation for distributed tracing.
-
----
-
-## 📂 Folder Structure
-
-```text
-genops-ai-platform/
-├── frontend/          
-├── backend/           
-├── docker/            
-├── k8s/               
-├── jenkins/           
-├── monitoring/        
-├── docs/              
-├── .github/           
-└── docker-compose.yml 
+Unified deployment using shell scripts:
+```bash
+./scripts/deploy.sh k8s
 ```
+
+### Manifests included:
+- `backend.yaml`: Deployment + Service + HPA
+- `postgres-pgvector.yaml`: StatefulSet + Service
+- `redis.yaml`: Deployment + Service
+- `ingress.yaml`: Nginx Ingress rules
+- `namespace.yaml`: Enterprise namespace isolation
 
 ---
 
@@ -189,10 +107,9 @@ genops-ai-platform/
 **Sachin**  
 *Senior DevSecOps Engineer*  
 📧 [cssachin83@gmail.com](mailto:cssachin83@gmail.com)  
-📞 +91 8496001030  
 🔗 [LinkedIn Profile](https://www.linkedin.com/in/01sachinc/)
 
 ---
 
 ## ⚖️ License
-This project is licensed under the MIT License see the [LICENSE](LICENSE) file for details.
+MIT License. See [LICENSE](LICENSE) for details.

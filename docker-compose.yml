@@ -8,22 +8,33 @@ services:
     ports:
       - "8081:8080"
     environment:
-      - REDIS_HOST=genops-redis
-      - REDIS_PORT=6379
-      - MYSQL_HOST=host.docker.internal
-      - MYSQL_PORT=3306
-      - MYSQL_DATABASE=genops
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=root
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://genops-postgres:5432/genops
+      - SPRING_DATASOURCE_USERNAME=genops_user
+      - SPRING_DATASOURCE_PASSWORD=genops_pass
+      - SPRING_DATA_REDIS_HOST=genops-redis
+      - SPRING_DATA_REDIS_PORT=6379
       - VLLM_BASE_URL=http://host.docker.internal:8000
-      - VLLM_MODEL=Qwen/Qwen2.5-7B-Instruct
-      - AI_TIMEOUT=90
-      - AI_RETRY_COUNT=3
       - JWT_SECRET=5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
       - genops-redis
+      - genops-postgres
+    networks:
+      - genops-network
+
+  genops-postgres:
+    image: pgvector/pgvector:pg16
+    container_name: genops-postgres
+    environment:
+      - POSTGRES_DB=genops
+      - POSTGRES_USER=genops_user
+      - POSTGRES_PASSWORD=genops_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
     networks:
       - genops-network
 
@@ -48,9 +59,33 @@ services:
     networks:
       - genops-network
 
+  # Monitoring Stack
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - genops-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    volumes:
+      - ./monitoring/grafana-datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - genops-network
+
 networks:
   genops-network:
     driver: bridge
 
 volumes:
   redis-data:
+  postgres-data:

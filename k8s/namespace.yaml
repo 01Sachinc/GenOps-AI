@@ -1,4 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: genops-ai
+  name: genops-prod
+  labels:
+    name: genops-prod
+    environment: production

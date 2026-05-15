@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: genops-redis
+  namespace: genops-prod
+spec:
+  ports:
+    - port: 6379
+  selector:
+    app: genops-redis
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: genops-redis
+  namespace: genops-prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: genops-redis
+  template:
+    metadata:
+      labels:
+        app: genops-redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379

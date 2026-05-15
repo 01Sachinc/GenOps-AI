@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: genops-postgres
+  namespace: genops-prod
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: genops-postgres
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: genops-postgres
+  namespace: genops-prod
+spec:
+  serviceName: "genops-postgres"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: genops-postgres
+  template:
+    metadata:
+      labels:
+        app: genops-postgres
+    spec:
+      containers:
+      - name: postgres
+        image: pgvector/pgvector:pg16
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: genops
+        - name: POSTGRES_USER
+          value: genops_user
+        - name: POSTGRES_PASSWORD
+          value: genops_pass
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 5Gi
